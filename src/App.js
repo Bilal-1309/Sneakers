@@ -2,24 +2,46 @@ import Card from "./components/Card";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
 
+const arr = [
+  {
+    name: "Мужские кроссовки Nike Blazer Mid Suede",
+    price: 12999,
+    image: "/img/sneakers/1.jpg",
+  },
+  {
+    name: "Мужские кроссовки Nike Air Max 270",
+    price: 15600,
+    image: "/img/sneakers/2.jpg",
+  },
+  {
+    name: "Мужские кроссовки Nike Blazer Mid Suede",
+    price: 8499,
+    image: "/img/sneakers/3.jpg",
+  },
+  {
+    name: "Мужские кроссовки Nike Blazer Mid Suede",
+    price: 8999,
+    image: "/img/sneakers/4.jpg",
+  },
+];
+
 function App() {
   return (
     <div className="wrapper clear">
-      <Drawer/>
-      <Header/>
+      <Drawer />
+      <Header />
       <div className="content p-40">
         <div className="d-flex align-center justify-between mb-40">
           <h1>Все кроссовки</h1>
           <div className="search-block d-flex">
-            <img src="/img/search.svg" alt="Search"/>
-            <input placeholder="Поиск ..."/>
+            <img src="/img/search.svg" alt="Search" />
+            <input placeholder="Поиск ..." />
           </div>
         </div>
         <div className="d-flex">
-          <Card img='/img/sneakers/1.jpg'/>
-          <Card img='/img/sneakers/2.jpg'/>
-          <Card img='/img/sneakers/3.jpg'/>
-          <Card img='/img/sneakers/4.jpg'/>
+          {arr.map((obj) => (
+            <Card key={`${obj.name + obj.price}`} title={obj.name} price={obj.price} img={obj.image} />
+          ))}
         </div>
       </div>
     </div>
