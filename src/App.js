@@ -1,50 +1,127 @@
-import Card from "./components/Card";
 import Header from "./components/Header";
 import Drawer from "./components/Drawer";
-
-const arr = [
-  {
-    name: "Мужские кроссовки Nike Blazer Mid Suede",
-    price: 12999,
-    image: "/img/sneakers/1.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Air Max 270",
-    price: 15600,
-    image: "/img/sneakers/2.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Blazer Mid Suede",
-    price: 8499,
-    image: "/img/sneakers/3.jpg",
-  },
-  {
-    name: "Мужские кроссовки Nike Blazer Mid Suede",
-    price: 8999,
-    image: "/img/sneakers/4.jpg",
-  },
-];
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Route, Routes } from "react-router-dom";
+import Home from "./components/pages/Home";
+import Favorites from "./components/pages/Favorites";
+import ThemeContext from "./context";
 
 function App() {
+  const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [cartOpened, setCartOpened] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const cartResp = await axios.get("/cart");
+      const favoritesResp = await axios.get("/favorites");
+      const itemsResp = await axios.get("/items");
+
+      setIsLoading(false);
+
+      setCartItems(cartResp.data);
+      setFavorites(favoritesResp.data);
+      setItems(itemsResp.data);
+    }
+    fetchData();
+  }, []);
+
+  const handleToggleCart = () => {
+    setCartOpened(!cartOpened);
+  };
+
+  const handleAddToCart = async (obj) => {
+    try {
+      if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
+        await axios.delete(`/cart/${obj.id}`);
+        setCartItems((prev) =>
+          prev.filter((item) => Number(item.id) !== Number(obj.id))
+        );
+      } else {
+        const { data } = await axios.post("/cart", obj);
+        setCartItems((prev) => [...prev, data]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleAddToFavorite = async (obj) => {
+    try {
+      if (favorites.find((item) => item.id === obj.id)) {
+        await axios.delete(`/favorites/${obj.id}`);
+        setFavorites((prev) => prev.filter((item) => item.id !== obj.id))
+      } else {
+        const { data } = await axios.post("/favorites", obj);
+        setFavorites((prev) => [...prev, data]);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleRemoveInCart = async (id) => {
+    try {
+      await axios.delete(`/cart/${id}`);
+      setCartItems((prev) => prev.filter((item) => item.id !== id));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const deleteTextInSearch = () => {
+    setSearchValue("");
+  };
+
+  const onChangeSearchInput = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const isItemAdded = (id) => {
+    return cartItems.some((obj) => Number(obj.id) === Number(id))
+  };
+
   return (
-    <div className="wrapper clear">
-      <Drawer />
-      <Header />
-      <div className="content p-40">
-        <div className="d-flex align-center justify-between mb-40">
-          <h1>Все кроссовки</h1>
-          <div className="search-block d-flex">
-            <img src="/img/search.svg" alt="Search" />
-            <input placeholder="Поиск ..." />
-          </div>
-        </div>
-        <div className="d-flex">
-          {arr.map((obj) => (
-            <Card key={`${obj.name + obj.price}`} title={obj.name} price={obj.price} img={obj.image} />
-          ))}
-        </div>
+    <ThemeContext.Provider value={{ items, cartItems, favorites, handleAddToFavorite, isItemAdded, handleToggleCart, setCartItems }}>
+      <div className="wrapper clear">
+        {cartOpened && (
+          <Drawer
+            items={cartItems}
+            handleToggleCart={handleToggleCart}
+            onRemove={handleRemoveInCart}
+          />
+        )}
+        <Header handleToggleCart={handleToggleCart} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                items={items}
+                cartItems={cartItems}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                onChangeSearchInput={onChangeSearchInput}
+                handleAddToFavorite={handleAddToFavorite}
+                handleAddToCart={handleAddToCart}
+                deleteTextInSearch={deleteTextInSearch}
+                isLoading={isLoading}
+              />
+            }
+          ></Route>
+          <Route
+            path="/favorites"
+            element={
+              <Favorites/>
+            }
+          ></Route>
+        </Routes>
       </div>
-    </div>
+    </ThemeContext.Provider>
   );
 }
 
