@@ -4,7 +4,7 @@ import ThemeContext from "../../context";
 
 const Favorites = () => {
 
-  const { favorites, handleAddToFavorite } = useContext(ThemeContext)
+  const { favorites, handleAddToFavorite, handleAddToCart } = useContext(ThemeContext)
 
   return (
     <div className="content p-40">
@@ -18,6 +18,7 @@ const Favorites = () => {
                 key={`${item.name} + ${item.price}`}
                 favorited={true}
                 onFavorite={handleAddToFavorite}
+                onPlus={handleAddToCart}
                 {...item}
               />
             ))}
