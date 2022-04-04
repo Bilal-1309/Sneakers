@@ -38,7 +38,7 @@ const Drawer = ({ onRemove, handleToggleCart, opened, items = [] }) => {
           Корзина
           <img
             className="cu-p"
-            src="/img/btn-remove.svg"
+            src="img/btn-remove.svg"
             alt="Close"
             onClick={handleToggleCart}
           />
@@ -58,7 +58,7 @@ const Drawer = ({ onRemove, handleToggleCart, opened, items = [] }) => {
                     <p className="mb-5">{obj.title}</p>
                     <b>{obj.price} руб.</b>
                   </div>
-                  <img className="removeBtn" onClick={() => onRemove(obj.id)} src="/img/btn-remove.svg" alt="Remove" />
+                  <img className="removeBtn" onClick={() => onRemove(obj.id)} src="img/btn-remove.svg" alt="Remove" />
                 </div>
               ))}
             </div>
@@ -76,7 +76,7 @@ const Drawer = ({ onRemove, handleToggleCart, opened, items = [] }) => {
                 </li>
               </ul>
               <button disabled={isLoading} onClick={handleOrder} className="greenButton">
-                Оформить заказ <img src="/img/arrow.svg" alt="Arrow" />
+                Оформить заказ <img src="img/arrow.svg" alt="Arrow" />
               </button>
             </div>
             </>
@@ -84,7 +84,7 @@ const Drawer = ({ onRemove, handleToggleCart, opened, items = [] }) => {
               <Info
                 title={orderComplete ? "Заказ оформлен" : "Корзина пустая"}
                 description={orderComplete ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке` : "Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ"}
-                image={orderComplete ? "/img/complete-order.jpg" : "/img/empty-cart.jpg"}
+                image={orderComplete ? "img/complete-order.jpg" : "img/empty-cart.jpg"}
               />
             )
         }
