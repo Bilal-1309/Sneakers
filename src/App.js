@@ -20,9 +20,9 @@ function App() {
     async function fetchData() {
       try {
         const [cartResp, favoritesResp, itemsResp] = await Promise.all([
-          axios.get("/cart"),
-          axios.get("/favorites"),
-          axios.get("/items"),
+          axios.get("https://623cb7017efb5abea6861ddd.mockapi.io/cart"),
+          axios.get("https://623cb7017efb5abea6861ddd.mockapi.io/favorites"),
+          axios.get("https://623cb7017efb5abea6861ddd.mockapi.io/items"),
         ]);
 
         setIsLoading(false);
@@ -48,9 +48,9 @@ function App() {
         setCartItems((prev) =>
           prev.filter((item) => Number(item.parentId) !== Number(obj.id))
         );
-        await axios.delete(`/cart/${findItem.id}`);
+        await axios.delete(`https://623cb7017efb5abea6861ddd.mockapi.io/cart/${findItem.id}`);
       } else {
-        const { data } = await axios.post("/cart", obj);
+        const { data } = await axios.post("https://623cb7017efb5abea6861ddd.mockapi.io/cart", obj);
         setCartItems((prev) => [...prev, data]);
       }
     } catch (e) {
@@ -62,9 +62,9 @@ function App() {
     try {
       if (favorites.find((item) => item.id === obj.id)) {
         setFavorites((prev) => prev.filter((item) => item.id !== obj.id));
-        await axios.delete(`/favorites/${obj.id}`);
+        await axios.delete(`https://623cb7017efb5abea6861ddd.mockapi.io/favorites/${obj.id}`);
       } else {
-        const { data } = await axios.post("/favorites", obj);
+        const { data } = await axios.post("https://623cb7017efb5abea6861ddd.mockapi.io/favorites", obj);
         setFavorites((prev) => [...prev, data]);
       }
     } catch (e) {
@@ -75,7 +75,7 @@ function App() {
   const handleRemoveInCart = async (id) => {
     try {
       setCartItems((prev) => prev.filter((item) => Number(item.id) !== Number(id)));
-      await axios.delete(`/cart/${id}`);
+      await axios.delete(`https://623cb7017efb5abea6861ddd.mockapi.io/cart/${id}`);
     } catch (e) {
       console.log(e);
     }

@@ -15,13 +15,13 @@ const Drawer = ({ onRemove, handleToggleCart, opened, items = [] }) => {
   const handleOrder = async () => {
     try {
       setIsLoading(true);
-      const {data} = await axios.post('/orders',{items: cartItems});
+      const {data} = await axios.post('https://623cb7017efb5abea6861ddd.mockapi.io/orders',{items: cartItems});
       setOrderId(data.id)
       setOrderComplete(true);
       setCartItems([])
         for( let i = 0; i < cartItems.length; i++) {
           const item = cartItems[i];
-          await axios.delete(`/cart/${item.id}`);
+          await axios.delete(`https://623cb7017efb5abea6861ddd.mockapi.io/cart/${item.id}`);
           await delay(1000)
         }
 
